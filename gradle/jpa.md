@@ -5,8 +5,6 @@
 * Typically an entity represents a table in a relational database, and each entity instance corresponds to a row in that table.
 * The primary programming artifact of an entity is the entity class, although entities can use helper classes.
 
----
-
 ## Requirements for Entity Classes
 
 - The class must be annotated with the javax.persistence.Entity annotation.
@@ -21,7 +19,6 @@
 
 - Persistent instance variables must be declared private, protected, or package-private, and can only be accessed directly by the entity class’s methods. Clients must access the entity’s state through accessor or business methods.
 
----
 ## Persistent Fields and Properties in Entity Classes
 
 - The persistent state of an entity can be accessed either through the entity’s instance variables or through JavaBeans-style properties. The fields or properties must be of the following Java language types:
@@ -63,17 +60,12 @@
 - Other entities and/or collections of entities
 
 - Embeddable classes
-- Basic DataType to Java Type Mapping
-	MS SQL Server: https://msdn.microsoft.com/en-us/library/ms378878(v=sql.110).aspx
-	ORACLE, PL/QL : https://docs.oracle.com/cd/B19306_01/java.102/b14188/datamap.htm
-	
-
--------------------------------
+- Basic DataType to Java Type Mapping.  
+   MS SQL Server: https://msdn.microsoft.com/en-us/library/ms378878(v=sql.110).aspx  
+   ORACLE, PL/QL : https://docs.oracle.com/cd/B19306_01/java.102/b14188/datamap.htm
 
 ## Persistent Fields
 - If the entity class uses persistent fields, the Persistence runtime accesses entity class instance variables directly. All fields not annotated javax.persistence.Transient or not marked as Java transient will be persisted to the data store. The object/relational mapping annotations must be applied to the instance variables.
-
----------------------------------
 
 ## Persistent Properties
 
@@ -85,8 +77,6 @@ Type getProperty()
 void setProperty(Type type)
 
 - The object/relational mapping annotations for must be applied to the getter methods. Mapping annotations cannot be applied to fields or properties annotated @Transient or marked transient.
-
-------------------------------
 
 ## Using Collections in Entity Fields and Properties
 - Collection-valued persistent fields and properties must use the supported Java collection interfaces regardless of whether the entity uses persistent fields or properties. The following collection interfaces may be used:
@@ -134,15 +124,12 @@ public class Person {
   * If the composite primary key class is represented as an id class, the names of primary key fields or properties in the primary key class and those of the entity class to which the id class is mapped must correspond and their types must be the same.
   * A primary key that corresponds to a derived identity must conform to the rules of Section 2.4.1.
 
-
 ## Primary Key and Entity Identity
 
 - Primary key should be one of the Java primitive type
 - Date primary key, temporal type should be spesified as DATE.
 
-
-------------------------------
-#Introduction
+##Introduction
 -Object/Relational Mapping
 -Mismatches Between Relational and Object Models
 -The Java Persistence API
@@ -152,11 +139,10 @@ public class Person {
 -The Entity Manager
 -JPA Providers
 
-
-# Object/Relational Mapping - Annotations
-## JavaBean Standards
-
-## Object/Relational Mapping - Property, Field, and Mixed Access
+## Object/Relational Mapping
+### Annotations
+### JavaBean Standards
+### Property, Field, and Mixed Access
 
 - The persistence implementation must be able to retrieve and set the persistent state of your entities, mapped superclasses, and embeddable types. JPA offers two modes of persistent state access: field access, and property access. Under field access, the implementation injects state directly into your persistent fields, and retrieves changed state from your fields as well. To declare field access on an entity with XML metadata, set the access attribute of your entity XML element to FIELD. To use field access for an entity using annotation metadata, simply place your metadata and mapping annotations on your field declarations:
 
@@ -199,95 +185,95 @@ Warning
 
 Though you will not require to mix modes in most of the scenarios, but it is possible and useful in some cases. For example, when an entity subclass is added to an existing hierarchy that uses a different access type. Adding an @Access annotation with a specified access mode on the subclass entity (or even field) will cause the default access type to be overridden for that entity subclass.
 
-## Table and Column Mapping
-## Primary Keys and Generation
-## Type Mappings
-## Temporal and Enumerated Types
-## Embedded Types
-## Entity Relationships
-## -@ManyToOne Relationships
-## -@OneToOne Relationships
-## -@OneToMany Relationships
-## -@ManyToMany Relationships
-## -Eager and Lazy Loading
+### Table and Column Mapping
+### Primary Keys and Generation
+### Type Mappings
+### Temporal and Enumerated Types
+### Embedded Types
+### Entity Relationships
+### -@ManyToOne Relationships
+### -@OneToOne Relationships
+### -@OneToMany Relationships
+### -@ManyToMany Relationships
+### -Eager and Lazy Loading
 
 ##Entity Managers
-- Putting Entities to Work
-- persistence.xml
-- Entity State and Transitions
-- Managing Transactions
-- Persistence Operations
-- Creating Queries
-- Named Queries
-- Query Parameters
-- Native Queries
+### Putting Entities to Work
+### persistence.xml
+### Entity State and Transitions
+### Managing Transactions
+### Persistence Operations
+### Creating Queries
+### Named Queries
+### Query Parameters
+### Native Queries
 
 ##JPQL
-- The Java Persistence Query Language
-- Query Structure
-- Path Expressions
-- Filtering
-- Scalar Functions
-- Operators and Precedence
-- between, like, in
-- is null, is empty
-- Ordering
-- Aliases
-- Grouping
-- Aggregate Functions
-- Joins
-- Constructors
+### The Java Persistence Query Language
+### Query Structure
+### Path Expressions
+### Filtering
+### Scalar Functions
+### Operators and Precedence
+### between, like, in
+### is null, is empty
+### Ordering
+### Aliases
+### Grouping
+### Aggregate Functions
+### Joins
+### Constructors
 
 ##Advanced Mapping
-- Inheritance Strategies
-- Single-Table Strategy
-- Joined-Table Strategy
-- Table-Per-Concrete-Class Strategy
-- Querying Over Inheritance Relationships
-- Secondary Tables
-- Composite Primary Keys
-- @IdClass and @EmbeddedId
-- Derived Identifiers
-- @ElementCollection
-- Default Values
-- @Version Fields
-- Cascading and Orphan Removal
-- Detachment and Merging
+### Inheritance Strategies
+### Single-Table Strategy
+### Joined-Table Strategy
+### Table-Per-Concrete-Class Strategy
+### Querying Over Inheritance Relationships
+### Secondary Tables
+### Composite Primary Keys
+### @IdClass and @EmbeddedId
+### Derived Identifiers
+### @ElementCollection
+### Default Values
+### @Version Fields
+### Cascading and Orphan Removal
+### Detachment and Merging
 
 ##The Criteria API
-- History of the Criteria API
-- Criteria Query Structure
-- The MetaModel API and Query Type Safety
-- Tuples
-- Joins
-- Predicates
-- Building Expressions
-- Ordering
-- Grouping
-- Encapsulating Persistence Logic
-- Façades
-- Range Queries
+### History of the Criteria API
+### Criteria Query Structure
+### The MetaModel API and Query Type Safety
+### Tuples
+### Joins
+### Predicates
+### Building Expressions
+### Ordering
+### Grouping
+### Encapsulating Persistence Logic
+### Façades
+### Range Queries
 
 
 ##Lifecycle and Validation
-- Lifecycle Events
-- Method Annotations
-- Entity Listeners
-- JSR-303 Validation
-- Constraint Annotations
-- Validation Modes
-- Validation Groups
+### Lifecycle Events
+### Method Annotations
+### Entity Listeners
+### JSR-303 Validation
+### Constraint Annotations
+### Validation Modes
+### Validation Groups
 
 ##Locking and Caching
-- Concurrency
-- Optimistic Locking
-- Optimistic Read Locking
-- Optimistic Write Locking
-- Pessimistic Locking
-- Caching
-- Persistence Context as Transactional Cache
-- Shared (2nd-level) Cache
-- Locking and Caching "Do's and Don'ts"
+### Concurrency
+### Optimistic Locking
+### Optimistic Read Locking
+### Optimistic Write Locking
+### Pessimistic Locking
+### Caching
+### Persistence Context as Transactional Cache
+### Shared (2nd-level) Cache
+### Locking and Caching "Do's and Don'ts"
 
 ## Judul
 - list 1
