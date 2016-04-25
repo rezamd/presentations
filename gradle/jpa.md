@@ -1,8 +1,10 @@
-# Entities
+#Java Persistence Api
+## Entities
 
-- An entity is a lightweight persistence domain object.
-- Typically an entity represents a table in a relational database, and each entity instance corresponds to a row in that table.
-- The primary programming artifact of an entity is the entity class, although entities can use helper classes.
+* An entity is a lightweight persistence domain object.
+* Typically an entity represents a table in a relational database, and each entity instance corresponds to a row in that table.
+* The primary programming artifact of an entity is the entity class, although entities can use helper classes.
+
 ---
 
 ## Requirements for Entity Classes
@@ -19,12 +21,12 @@
 
 - Persistent instance variables must be declared private, protected, or package-private, and can only be accessed directly by the entity class’s methods. Clients must access the entity’s state through accessor or business methods.
 
---------------------------------
+---
 ## Persistent Fields and Properties in Entity Classes
 
--The persistent state of an entity can be accessed either through the entity’s instance variables or through JavaBeans-style properties. The fields or properties must be of the following Java language types:
+- The persistent state of an entity can be accessed either through the entity’s instance variables or through JavaBeans-style properties. The fields or properties must be of the following Java language types:
 
--Java primitive types
+- Java primitive types
 
 - java.lang.String
 
@@ -123,23 +125,14 @@ public class Person {
 - Property Access Type
 
 - Composite Primary Key Rules:
-	• The primary key class must be public and must have a public no-arg constructor.
-	• The access type (field- or property-based access) of a primary key class is determined by the
-	access type of the entity for which it is the primary key unless the primary key is a embedded
-	id and a different access type is specified. See Section 2.3, “Access Type”.
-	• If property-based access is used, the properties of the primary key class must be public or protected.
-	• The primary key class must be serializable.
-	• The primary key class must define equals and hashCode methods. The semantics of value
-	equality for these methods must be consistent with the database equality for the database types
-	to which the key is mapped.
-	• A composite primary key must either be represented and mapped as an embeddable class (see
-	Section 11.1.17, “EmbeddedId Annotation”) or must be represented as an id class and mapped
-	to multiple fields or properties of the entity class (see Section 11.1.22, “IdClass Annotation”).
-	• If the composite primary key class is represented as an id class, the names of primary key
-	fields or properties in the primary key class and those of the entity class to which the id class is
-	mapped must correspond and their types must be the same.
-	• A primary key that corresponds to a derived identity must conform to the rules of Section
-	2.4.1.
+  * The primary key class must be public and must have a public no-arg constructor.
+  * The access type (field- or property-based access) of a primary key class is determined by the access type of the entity for which it is the primary key unless the primary key is a embedded id and a different access type is specified. See Section 2.3, “Access Type”.
+  * If property-based access is used, the properties of the primary key class must be public or protected.
+  * The primary key class must be serializable.
+  * The primary key class must define equals and hashCode methods. The semantics of value equality for these methods must be consistent with the database equality for the database types to which the key is mapped.
+  * A composite primary key must either be represented and mapped as an embeddable class (see Section 11.1.17, “EmbeddedId Annotation”) or must be represented as an id class and mapped to multiple fields or properties of the entity class (see Section 11.1.22, “IdClass Annotation”).
+  * If the composite primary key class is represented as an id class, the names of primary key fields or properties in the primary key class and those of the entity class to which the id class is mapped must correspond and their types must be the same.
+  * A primary key that corresponds to a derived identity must conform to the rules of Section 2.4.1.
 
 
 ## Primary Key and Entity Identity
@@ -219,82 +212,82 @@ Though you will not require to mix modes in most of the scenarios, but it is pos
 ## -Eager and Lazy Loading
 
 ##Entity Managers
--Putting Entities to Work
--persistence.xml
--Entity State and Transitions
--Managing Transactions
--Persistence Operations
--Creating Queries
--Named Queries
--Query Parameters
--Native Queries
+- Putting Entities to Work
+- persistence.xml
+- Entity State and Transitions
+- Managing Transactions
+- Persistence Operations
+- Creating Queries
+- Named Queries
+- Query Parameters
+- Native Queries
 
 ##JPQL
--The Java Persistence Query Language
--Query Structure
--Path Expressions
--Filtering
--Scalar Functions
--Operators and Precedence
--between, like, in
--is null, is empty
--Ordering
--Aliases
--Grouping
--Aggregate Functions
--Joins
--Constructors
+- The Java Persistence Query Language
+- Query Structure
+- Path Expressions
+- Filtering
+- Scalar Functions
+- Operators and Precedence
+- between, like, in
+- is null, is empty
+- Ordering
+- Aliases
+- Grouping
+- Aggregate Functions
+- Joins
+- Constructors
 
 ##Advanced Mapping
--Inheritance Strategies
--Single-Table Strategy
--Joined-Table Strategy
--Table-Per-Concrete-Class Strategy
--Querying Over Inheritance Relationships
--Secondary Tables
--Composite Primary Keys
--@IdClass and @EmbeddedId
--Derived Identifiers
--@ElementCollection
--Default Values
--@Version Fields
--Cascading and Orphan Removal
--Detachment and Merging
+- Inheritance Strategies
+- Single-Table Strategy
+- Joined-Table Strategy
+- Table-Per-Concrete-Class Strategy
+- Querying Over Inheritance Relationships
+- Secondary Tables
+- Composite Primary Keys
+- @IdClass and @EmbeddedId
+- Derived Identifiers
+- @ElementCollection
+- Default Values
+- @Version Fields
+- Cascading and Orphan Removal
+- Detachment and Merging
 
 ##The Criteria API
--History of the Criteria API
--Criteria Query Structure
--The MetaModel API and Query Type Safety
--Tuples
--Joins
--Predicates
--Building Expressions
--Ordering
--Grouping
--Encapsulating Persistence Logic
--Façades
--Range Queries
+- History of the Criteria API
+- Criteria Query Structure
+- The MetaModel API and Query Type Safety
+- Tuples
+- Joins
+- Predicates
+- Building Expressions
+- Ordering
+- Grouping
+- Encapsulating Persistence Logic
+- Façades
+- Range Queries
 
 
 ##Lifecycle and Validation
--Lifecycle Events
--Method Annotations
--Entity Listeners
--JSR-303 Validation
--Constraint Annotations
--Validation Modes
--Validation Groups
+- Lifecycle Events
+- Method Annotations
+- Entity Listeners
+- JSR-303 Validation
+- Constraint Annotations
+- Validation Modes
+- Validation Groups
 
 ##Locking and Caching
--Concurrency
--Optimistic Locking
--Optimistic Read Locking
--Optimistic Write Locking
--Pessimistic Locking
--Caching
--Persistence Context as Transactional Cache
--Shared (2nd-level) Cache
-Locking and Caching "Do's and Don'ts"
+- Concurrency
+- Optimistic Locking
+- Optimistic Read Locking
+- Optimistic Write Locking
+- Pessimistic Locking
+- Caching
+- Persistence Context as Transactional Cache
+- Shared (2nd-level) Cache
+- Locking and Caching "Do's and Don'ts"
 
 ## Judul
 - list 1
