@@ -130,14 +130,14 @@ public class Person {
 - Date primary key, temporal type should be spesified as DATE.
 
 ##Introduction
--Object/Relational Mapping
--Mismatches Between Relational and Object Models
--The Java Persistence API
--JPA History
--JPA Architecture
--Entity Metadata
--The Entity Manager
--JPA Providers
+### Object/Relational Mapping
+### Mismatches Between Relational and Object Models
+### The Java Persistence API
+### JPA History
+### JPA Architecture
+### Entity Metadata
+### The Entity Manager
+### JPA Providers
 
 ## Object/Relational Mapping
 ### Annotations
@@ -146,7 +146,7 @@ public class Person {
 
 - The persistence implementation must be able to retrieve and set the persistent state of your entities, mapped superclasses, and embeddable types. JPA offers two modes of persistent state access: field access, and property access. Under field access, the implementation injects state directly into your persistent fields, and retrieves changed state from your fields as well. To declare field access on an entity with XML metadata, set the access attribute of your entity XML element to FIELD. To use field access for an entity using annotation metadata, simply place your metadata and mapping annotations on your field declarations:
 
-```java
+   ```java
 @ManyToOne
 private Company publisher;
 ```
