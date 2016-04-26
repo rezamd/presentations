@@ -222,20 +222,23 @@ Though you will not require to mix modes in most of the scenarios, but it is pos
 ### Temporal and Enumerated Types
 ####Temporal Type  
 When dealing with persistent field with java.util.Date or java.util.Calendar we need to convert to database compatible column type to store and retrieve from database. Temporal type have 3 enum value.  
-- TemporalType.DATE (equal to java.sql.Date)
+- TemporalType.DATE (equal to java.sql.Date)  
+
   ```java
 @Temporal(TemporalType.DATE)
 @Column(name = "START_DATE")
 private java.util.Date startDate;
 ```
 - TemporalType.TIME (equal to java.sql.Time)  
-    ```java
+
+  ```java
 @Temporal(TemporalType.TIME)
 @Column(name = "START_DATE")
 private java.util.Date startDate;
 ```
 - TemporalType.TIMESTAMP (equal to java.sql.TimeStamp)  
-   ```java
+
+  ```java
 @Temporal(TemporalType.TIMESTAMP)
 @Column(name = "START_DATE")
 private java.util.Date startDate;
