@@ -163,7 +163,117 @@ public class Person {
 
 ## Object/Relational Mapping
 ### Annotations
+Normally we use xml to configure the JPA mapping of POJO with JPA configuration, this is a separated xml file from the Java files. With annotation we can write configuration part directly on the class definition. Annotations start with '@' symbol. They are declared before class, field/property declaration. All JPA annotation defined in javax.persistence package  
+
+Here is the list of most used JPA Annotation  
+
+<table>
+   <tbody>
+      <tr>
+         <th>Annotation</th>
+         <th>Description</th>
+      </tr>
+      <tr>
+         <td>@Entity</td>
+         <td>This annotation specifies to declare the class as entity or a table.</td>
+      </tr>
+      <tr>
+         <td>@Table</td>
+         <td>This annotation specifies to declare table name.</td>
+      </tr>
+      <tr>
+         <td>@Basic</td>
+         <td>This annotation specifies non constraint fields explicitly.</td>
+      </tr>
+      <tr>
+         <td>@Embedded</td>
+         <td>This annotation specifies the properties of class or an entity whose value instance of an embeddable class.</td>
+      </tr>
+      <tr>
+         <td>@Id</td>
+         <td>This annotation specifies the property, use for identity (primary key of a table) of the class.</td>
+      </tr>
+      <tr>
+         <td>@GeneratedValue</td>
+         <td>This annotation specifies, how the identity attribute can be initialized such as Automatic, manual, or value taken from sequence table.</td>
+      </tr>
+      <tr>
+         <td>@Transient</td>
+         <td>This annotation specifies the property which in not persistent i.e. the value is never stored into database.</td>
+      </tr>
+      <tr>
+         <td>@Column</td>
+         <td>This annotation is used to specify column or attribute for persistence property.</td>
+      </tr>
+      <tr>
+         <td>@SequenceGenerator</td>
+         <td>This annotation is used to define the value for the property which is specified in @GeneratedValue annotation. It creates a sequence.</td>
+      </tr>
+      <tr>
+         <td>@TableGenerator</td>
+         <td>This annotation is used to specify the value generator for property specified in @GeneratedValue annotation. It creates a table for value generation.</td>
+      </tr>
+      <tr>
+         <td>@AccessType</td>
+         <td>This type of annotation is used to set the access type. If you set @AccessType(FIELD) then Field wise access will occur. If you set @AccessType(PROPERTY) then Property wise assess will occur.</td>
+      </tr>
+      <tr>
+         <td>@JoinColumn</td>
+         <td>This annotation is used to specify an entity association or entity collection. This is used in many- to-one and one-to-many associations.</td>
+      </tr>
+      <tr>
+         <td>@UniqueConstraint</td>
+         <td>This annotation is used to specify the field, unique constraint for primary or secondary table.</td>
+      </tr>
+      <tr>
+         <td>@ColumnResult</td>
+         <td>This annotation references the name of a column in the SQL query using select clause.</td>
+      </tr>
+      <tr>
+         <td>@ManyToMany</td>
+         <td>This annotation is used to define a many-to-many relationship between the join Tables.</td>
+      </tr>
+      <tr>
+         <td>@ManyToOne</td>
+         <td>This annotation is used to define a many-to-one relationship between the join Tables.</td>
+      </tr>
+      <tr>
+         <td>@OneToMany</td>
+         <td>This annotation is used to define a one-to-many relationship between the join Tables.</td>
+      </tr>
+      <tr>
+         <td>@OneToOne</td>
+         <td>This annotation is used to define a one-to-one relationship between the join Tables.</td>
+      </tr>
+      <tr>
+         <td>@NamedQueries</td>
+         <td>This annotation is used for specifying list of named queries.</td>
+      </tr>
+      <tr>
+         <td>@NamedQuery</td>
+         <td>This annotation is used for specifying a Query using static name.</td>
+      </tr>
+   </tbody>
+</table>
+
+  
 ### JavaBean Standards
+
+JavaBeans are classes that encapsulate many objects into a single object (the bean). They are serializable, have a zero-argument constructor, and allow access to properties using getter and setter methods. The name "Bean" was given to encompass this standard, which aims to create reusable software components for Java.
+
+JavaBean Convention
+- Bean contains default constructor without arguments  
+- To access properties need using get(accessor), set(mutator), is(for boolean accessor).  
+- Accessor or Mutator method name start with small lettered accessor or mutator following with the field name started with capital first letter.
+  Example:  
+
+  ```java
+public void setName(String argName){...}  
+public void String getName(){...}  
+public boolean isHeadFamily(){...}  
+public void setHeadFamily(boolean argHeadFamily){...}
+```
+
 ### Property, Field, and Mixed Access
 
 - The persistence implementation must be able to retrieve and set the persistent state of your entities, mapped superclasses, and embeddable types. JPA offers two modes of persistent state access: field access, and property access. Under field access, the implementation injects state directly into your persistent fields, and retrieves changed state from your fields as well. To declare field access on an entity with XML metadata, set the access attribute of your entity XML element to FIELD. To use field access for an entity using annotation metadata, simply place your metadata and mapping annotations on your field declarations:
@@ -965,7 +1075,7 @@ In Order class:
 ```
 ### @ManyToMany Relationships
 
-In Many-to-Many relationship one or more rows from an entity are associated with one or more row in other entity. In JPA we define this using @ManyToMany anotation. Many to many relationship need a join table. We define the join table using the @JoinTable annotation. Join table contain foreign key to source and target object primary keys(joinColumns, inverseJoinColumns).
+In Many-to-Many relationship one or more rows from an entity are associated with one or more row in other entity. In JPA we define this using @ManyToMany annotation. Many to many relationship need a join table. We define the join table using the @JoinTable annotation. Join table contain foreign key to source and target object primary keys(joinColumns, inverseJoinColumns).
 
 
 
@@ -1046,6 +1156,151 @@ Collection<Employee> employees;
 ```
 
 ### Eager and Lazy Loading
+Eager loading is needed when we want relationship immediately fetched(eagerly), while Lazy loading is used when we want to load relationship later(lazily).
+Usually used in Relationship annotation, and @Basic annotation. The FethType value is between EAGER or LAZY
+Here is example usage.
+
+```java
+@OneToOne(fetch = FetchType.EAGER)
+@OneToMany(fetch = FetchType.LAZY)
+@ManyToOne(fetch = FetchType.EAGER)
+@ManyToMany(fetch = FetchType.LAZY)
+@Basic(fetch = FetchType.LAZY)
+```
+
+How to initialize lazy attribute?
+
+1. Call a method on the mapped relation  
+  To fetch Lazily attribute we just need to access the attribute using the accessor. Then Entity Manager will fetch those attribute using the relation using a query. Good for small amount entity relation, worse on huge amount of entity relation. Number of query executed equal to number of entity relation.
+  
+  ```java
+Order order = this.em.find(Order.class, orderId);
+order.getItems().size();
+  ```
+  
+2. Use fetch join in JPQL query  
+  To use fetch join in JPQL query add "JOIN FETCH" syntax to existing entity query. Good performance because only need to perform one query to fetch all needed relation, bad code maintenance if you have many use case with different fetch needed then you need to write specific query for specific need.
+  
+  Usage  
+  ```java
+class Order{
+	...;
+	@OneToMany(..);
+	private Set<Item> items;
+	
+	...
+}
+
+
+Query q = this.em.createQuery("SELECT o FROM Order o JOIN FETCH o.items i WHERE o.id = :id");
+q.setParameter("id", orderId);
+newOrder = (Order) q.getSingleResult();
+  ```
+  
+3. Use fetch join in criteria API  
+  Almost same with JPQL in this approach we use criteria API to fetch lazy attributes. Performance and maintainability same with JPQL.  
+  
+  Usage
+
+  ```java
+CriteriaBuilder cb = em.getCriteriaBuilder();
+CriteriaQuery q = cb.createQuery(Order.class);
+Root o = q.from(Order.class);
+o.fetch("items", JoinType.INNER);
+q.select(o);
+q.where(cb.equal(o.get("id"), orderId));
+
+Order order = (Order)this.em.createQuery(q).getSingleResult();
+  ```
+
+4. Named Entity Graph
+When using named Entity Graph we need to define @NamedEntityGraph to the entity class. In Order to Add the fields to the entity graph, we need to specifying them in the attributeNodes element of @NamedEntityGraph with a javax.persistence.NamedAttributeNode annotation. If wee want to define more than one NamedEntityGraph we can wrap them inside @NameEntityGraphs anotation.
+
+  Usage:
+  - Single Usage
+  ```java
+@NamedEntityGraph
+@Entity
+public class EmailMessage {
+    @Id
+    String messageId;
+    String subject;
+    String body;
+    String sender;
+}
+```
+
+  ```java
+@NamedEntityGraph(name="emailEntityGraph", attributeNodes={
+    @NamedAttributeNode("subject"),
+    @NamedAttributeNode("sender")
+})
+@Entity
+public class EmailMessage { ... }
+```
+
+  - Multiple usage
+
+  ```java
+@NamedEntityGraphs({
+    @NamedEntityGraph(name="previewEmailEntityGraph", attributeNodes={
+        @NamedAttributeNode("subject"),
+        @NamedAttributeNode("sender"),
+        @NamedAttributeNode("body")
+    }),
+    @NamedEntityGraph(name="fullEmailEntityGraph", attributeNodes={
+        @NamedAttributeNode("sender"),
+        @NamedAttributeNode("subject"),
+        @NamedAttributeNode("body"),
+        @NamedAttributeNode("attachments")
+    })
+})
+@Entity
+public class EmailMessage { ... }
+```
+
+  - Execution using find
+  ```java
+EntityGraph<EmailMessage> eg = em.getEntityGraph("emailEntityGraph");
+Map hints = new HashMap();
+hints.put("javax.persistence.fetchgraph", graph); // or javax.persistence.loadgraph
+
+return this.em.find(Order.class, orderId, hints);
+```
+
+  - Execution using query
+  
+  ```java
+EntityGraph<EmailMessage> eg = em.getEntityGraph("emailEntityGraph");
+CriteriaBuilder cb = em.getCriteriaBuilder();
+CriteriaQuery q = cb.createQuery(EmailMessage.class);
+Root<EmailMessage> o = q.from(EmailMessage.class); // o is unused
+TypedQuery<EmailMessage> q = em.createQuery(cq);
+List<EmailMessage> emailMessage = (EmailMessage)this.em.createQuery(q).setHint("javax.persistence.loadgraph", eg).getResultList(); // or javax.persistence.fetchgraph
+```
+
+  https://docs.oracle.com/javaee/7/tutorial/persistence-entitygraphs002.htm
+
+5. Dynamic Entity Graph
+In Dynamic Entity Graph we don;t need to define the annotation in entity class. We can directly create the entity graph.
+
+  Usage
+
+  ```java
+EntityGraph<EmailMessage> eg = em.createEntityGraph(EmailMessage.class);
+eg.addAttributeNodes("body");
+...
+Properties props = new Properties();
+props.put("javax.persistence.fetchgraph", eg); // or javax.persistence.loadgraph
+EmailMessage message = em.find(EmailMessage.class, id, props);
+```
+
+  https://docs.oracle.com/javaee/7/tutorial/persistence-entitygraphs001.htm
+
+Note:
+- javax.persistence.fetchgraph will load all attributes defined in the EntityGraph, and all unlisted attributes will try to use LAZY load.
+- javax.persistence.loadgraph will load all attributes defined in the EntityGraph, and all unlisted attributes will apply it's fetch settings.
+- Entity Graph need JPA 2.1 and JPA 2.1 Compatible Provider
 
 ## Entity Managers
 ### Putting Entities to Work
