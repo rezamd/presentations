@@ -969,30 +969,37 @@ In Many-to-Many relationship one or more rows from an entity are associated with
 
 
 
-- Example 1
+- Example 1  
   In Customer class:
 
   ```java
 @ManyToMany
 @JoinTable(name="CUST_PHONES")
 public Set<PhoneNumber> getPhones() { return phones; }
-In PhoneNumber class:
+```
+
+  In PhoneNumber class:
+
+  ```java
 @ManyToMany(mappedBy="phones")
 public Set<Customer> getCustomers() { return customers; }
 ```
 
-- Example 2:
+- Example 2:  
   In Customer class:
 
   ```java
 @ManyToMany(targetEntity=com.acme.PhoneNumber.class)
 public Set getPhones() { return phones; }
+```
 In PhoneNumber class:
+
+  ```java
 @ManyToMany(targetEntity=com.acme.Customer.class, mappedBy="phones")
 public Set getCustomers() { return customers; }
 ```
 
-- Example 3:
+- Example 3:  
   In Customer class:
 
   ```java
@@ -1005,7 +1012,10 @@ inverseJoinColumns=
 @JoinColumn(name="PHONE_ID", referencedColumnName="ID")
 )
 public Set<PhoneNumber> getPhones() { return phones; }
+```
 In PhoneNumberClass:
+
+  ```java
 @ManyToMany(mappedBy="phones")
 public Set<Customer> getCustomers() { return customers; }
 ```
@@ -1112,13 +1122,3 @@ Collection<Employee> employees;
 ### Persistence Context as Transactional Cache
 ### Shared (2nd-level) Cache
 ### Locking and Caching "Do's and Don'ts"
-
-## Judul
-- list 1
-- list 2
-![gambar](images/1.png)
-![text](images/1.png)
-
-[‎4/‎22/‎2016 10:05 AM] Kustian: 
-yup
-contoh https://github.com/mitraisjavameetup/presentations 
