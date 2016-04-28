@@ -1,5 +1,7 @@
 #Java Persistence Api
+
 ##Introduction
+
 ### Object/Relational Mapping
 - A task to map a Java object with their attributes with relational database table and columns for all database task using object approach.
 
@@ -46,6 +48,7 @@ Provide by Oracle, Java persistenece API is a collection of classes and methods 
   This interface is implemented by each JPA vendor to obtain relational objects that meet the criteria.
   
 ### Entity Metadata
+
 #### Entities
 
 * An entity is a lightweight persistence domain object.
@@ -159,9 +162,58 @@ public class Person {
 ```
 
 ### The Entity Manager
+Entity manager is JPA interface to interact with the persistence context. An instance of EntityManager used to create, remove, find, or query entities. To get an EntityManager we need to create from EntityManager Factory. While EntityManagerFactory created by calling  "Persistence.createEntityManagerFactory( "persistence_unit_name" );". The persistence unit name defined in persistence.xml file.
+
+```xml
+...
+ <persistence-unit name="persistence_unit_name" transaction-type="RESOURCE_LOCAL">
+...
+```
+
+List of method in EntityManager interface: http://docs.oracle.com/javaee/7/api/javax/persistence/EntityManager.html
+
+Usage Example:
+
+```java
+EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "persistence_unit_name" );
+      
+EntityManager entitymanager = emfactory.createEntityManager( );
+entitymanager.getTransaction( ).begin( );
+
+Customer customerSample1 = new Customer();
+customerSample1.setFullName("Anastasia Varah");
+customerSample1.setGender("Female");
+customerSample1.setPhoneNumber("+62080989999");
+entitymanager.persist( employee ); //Create New
+entitymanager.getTransaction( ).commit( );
+...
+Customer customerLoadSample = entitymanager.find( Customer.class, 1 ); //Find Entity
+
+customerLoadSample.setPhoneNumber( "+62080989997" );  //Update Entity data
+entitymanager.getTransaction( ).commit( ); // Commit Update
+
+...
+customerLoadSample customerLoadSampleToRemove= entitymanager.find( Customer.class, 1 ); //Find Entity
+entitymanager.remove( customerLoadSampleToRemove ); //remove entity
+entitymanager.getTransaction( ).commit( ); // commit remove
+
+entitymanager.close( );
+emfactory.close( );
+```
+
 ### JPA Providers
+JPA API is a interface specification while to make it work need JPA provider for implementation.
+
+JPA Implementation:
+- Hibernate (most widely used and Mitrais Recommendation)
+- TopLink
+- EclipseLink
+- Apache OpenJPA
+- ObjectDB
+- DataNucleaus
 
 ## Object/Relational Mapping
+
 ### Annotations
 Normally we use xml to configure the JPA mapping of POJO with JPA configuration, this is a separated xml file from the Java files. With annotation we can write configuration part directly on the class definition. Annotations start with '@' symbol. They are declared before class, field/property declaration. All JPA annotation defined in javax.persistence package  
 
@@ -1304,13 +1356,21 @@ Note:
 
 ## Entity Managers
 ### Putting Entities to Work
+
 ### persistence.xml
+
 ### Entity State and Transitions
+
 ### Managing Transactions
+
 ### Persistence Operations
+
 ### Creating Queries
+
 ### Named Queries
+
 ### Query Parameters
+
 ### Native Queries
 
 ##JPQL
