@@ -163,43 +163,8 @@ public class Person {
 
 ### The Entity Manager
 Entity manager is JPA interface to interact with the persistence context. An instance of EntityManager used to create, remove, find, or query entities. To get an EntityManager we need to create from EntityManager Factory. While EntityManagerFactory created by calling  "Persistence.createEntityManagerFactory( "persistence_unit_name" );". The persistence unit name defined in persistence.xml file.
-
-```xml
-...
- <persistence-unit name="persistence_unit_name" transaction-type="RESOURCE_LOCAL">
-...
-```
-
 List of method in EntityManager interface: http://docs.oracle.com/javaee/7/api/javax/persistence/EntityManager.html
 
-Usage Example:
-
-```java
-EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "persistence_unit_name" );
-      
-EntityManager entitymanager = emfactory.createEntityManager( );
-entitymanager.getTransaction( ).begin( );
-
-Customer customerSample1 = new Customer();
-customerSample1.setFullName("Anastasia Varah");
-customerSample1.setGender("Female");
-customerSample1.setPhoneNumber("+62080989999");
-entitymanager.persist( employee ); //Create New
-entitymanager.getTransaction( ).commit( );
-...
-Customer customerLoadSample = entitymanager.find( Customer.class, 1 ); //Find Entity
-
-customerLoadSample.setPhoneNumber( "+62080989997" );  //Update Entity data
-entitymanager.getTransaction( ).commit( ); // Commit Update
-
-...
-customerLoadSample customerLoadSampleToRemove= entitymanager.find( Customer.class, 1 ); //Find Entity
-entitymanager.remove( customerLoadSampleToRemove ); //remove entity
-entitymanager.getTransaction( ).commit( ); // commit remove
-
-entitymanager.close( );
-emfactory.close( );
-```
 
 ### JPA Providers
 JPA API is a interface specification while to make it work need JPA provider for implementation.
@@ -1358,27 +1323,335 @@ Note:
 ### Putting Entities to Work
 
 ### persistence.xml
+When you want to create EntityManagerFactory from a persistence unit, you need to defined that persistence unit in persistence.xml
 
+Java Usage:
+
+```java
+ EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "persistence_unit_name" );
+      EntityManager entitymanager = emfactory.createEntityManager();
+```
+persistence.xml
+
+```xml
+...
+ <persistence-unit name="persistence_unit_name" transaction-type="RESOURCE_LOCAL">
+...
+```
 ### Entity State and Transitions
 
 ### Managing Transactions
+Transaction in Entity Manager operation can be controlled used JTA or resource-local EntityTransaction API.  
+An entity manager whose underlying transactions are controlled through JTA is termed a JTA entity manager.  
+An entity manager whose underlying transactions are controlled by the application through the EntityTransaction API is termed a resource-local entity manager.
+
+Usage:
+
+- Non-managed environment(Resource-Local)
+
+Example:
+
+```java
+// Non-managed environment idiom
+EntityManager em = emf.createEntityManager();
+EntityTransaction tx = null;
+try {
+    tx = em.getTransaction();
+    tx.begin();
+
+    // do some work
+    ...
+
+    tx.commit();
+}
+catch (RuntimeException e) {
+    if ( tx != null && tx.isActive() ) tx.rollback();
+    throw e; // or display error message
+}
+finally {
+    em.close();
+}
+```
+
+- JTA container Managed Transaction(CMT)
+
+Example:
+
+
+```java
+// CMT idiom
+@Resource public EntityManagerFactory factory;
+
+public void doBusiness() {
+    EntityManager em = factory.createEntityManager();
+    try {
+
+    // do some work
+    ...
+}
+catch (RuntimeException e) {
+    throw e; // or display error message
+}
+finally {
+    em.close();
+}
+```
+
+Example
+- JTA Bean managed Transaction(BMT)
+
+Example:
+
+```java
+// BMT idiom
+@Resource public UserTransaction utx;
+@Resource public EntityManagerFactory factory;
+
+public void doBusiness() {
+    EntityManager em = factory.createEntityManager();
+    try {
+
+    // do some work
+    ...
+
+    utx.commit();
+}
+catch (RuntimeException e) {
+    if (utx != null) utx.rollback();
+    throw e; // or display error message
+}
+finally {
+    em.close();
+}
+```
+
+http://www.byteslounge.com/tutorials/container-vs-application-managed-entitymanager
 
 ### Persistence Operations
+Persistence Operation cover load and store to Entity database(CRUD).
+Usage Example in Java:
+
+```java
+EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "persistence_unit_name" );
+      
+EntityManager entitymanager = emfactory.createEntityManager( );
+entitymanager.getTransaction( ).begin( );
+
+Customer customerSample1 = new Customer();
+customerSample1.setFullName("Anastasia Varah");
+customerSample1.setGender("Female");
+customerSample1.setPhoneNumber("+62080989999");
+entitymanager.persist( employee ); //Create New
+entitymanager.getTransaction( ).commit( );
+...
+Customer customerLoadSample = entitymanager.find( Customer.class, 1 ); //Find Entity
+
+customerLoadSample.setPhoneNumber( "+62080989997" );  //Update Entity data
+entitymanager.getTransaction( ).commit( ); // Commit Update
+
+...
+customerLoadSample customerLoadSampleToRemove= entitymanager.find( Customer.class, 1 ); //Find Entity
+entitymanager.remove( customerLoadSampleToRemove ); //remove entity
+entitymanager.getTransaction( ).commit( ); // commit remove
+
+entitymanager.close( );
+emfactory.close( );
+```
 
 ### Creating Queries
+Java Use Query interface for querying to database.
+Here is easiest way to create Query.
+
+```java
+EntityManager em = getEntityManager();
+jpqlStringQuery = "select emp from Employee emp";
+Query query = em.createQuery(jpqlStringQuery);
+```
 
 ### Named Queries
+A named query is used for a static query that will be used many times in the application. The advantage of a named query is that it can be defined once, in one place, and reused in the application
+
+```java
+
+@NamedQuery(
+  name="findAllEmployees",
+  query="Select emp from Employee emp" //parameter is city
+  hints={@QueryHint(name="acme.jpa.batch", value="emp.address")}
+)
+public class Employee {
+  ...
+}
+
+EntityManager em = getEntityManager();
+Query query = em.createNamedQuery("findAllEmployees"); //usage
+List<Employee> employees = query.getResultList();
+```
+
+There is also @NamedNativeQuery if you want to use native SQL query
+
+usage:
+
+```java
+@NamedNativeQuery(
+  name="findAllEmployeesInCity",
+  query="SELECT E.* from EMP E, ADDRESS A WHERE E.EMP_ID = A.EMP_ID AND A.CITY = ?",
+  resultClass=Employee.class
+)
+public class Employee {
+  ...
+}
+```
+There first example used if you select only one entity and use select entity.* column. If more than one entity you can reference to sample below.
+
+```java
+@NamedNativeQuery(
+  name="findAllEmployeesInCity",
+  query="SELECT E.*, A.* from EMP E, ADDRESS A WHERE E.EMP_ID = A.EMP_ID AND A.CITY = ?",
+  resultSetMapping="employee-address"
+)
+@SqlResultSetMapping(name="employee-address", 
+  entities={ 
+    @EntityResult(entityClass=Employee.class),
+    @EntityResult(entityClass=Address.class)}
+)
+public class Employee {
+  ...
+}
+```
+
+If your named native query select partial column of an entity you need to map using @ContructorResult.
+
+```java
+@NamedNativeQuery(
+  name="findAllEmployeeDetails",
+  query="SELECT E.EMP_ID, E.F_NAME, E.L_NAME, A.CITY from EMP E, ADDRESS A WHERE E.EMP_ID = A.EMP_ID",
+  resultSetMapping="employee-details"
+)
+@SqlResultSetMapping(name="employee-details", 
+  classes={ 
+    @ConstructorResult(targetClass=EmployeeDetails.class, columns={
+        @ColumnResult(name="EMP_ID", type=Integer.class),
+        @ColumnResult(name="F_NAME", type=String.class),
+        @ColumnResult(name="L_NAME", type=String.class),
+        @ColumnResult(name="CITY", type=String.class)
+    })
+  }
+)
+public class Employee {
+  ...
+}
+```
+
 
 ### Query Parameters
+To add query parameter in query string you can write ":" followed by you parameter name. To set the parameter value call setParameter method of Query interface.
 
+```java
+
+@NamedQuery(
+  name="findAllEmployeesInCity",
+  query="Select emp from Employee emp where emp.address.city = :city" //parameter is city
+  hints={@QueryHint(name="acme.jpa.batch", value="emp.address")}
+)
+public class Employee {
+  ...
+}
+
+EntityManager em = getEntityManager();
+Query query = em.createNamedQuery("findAllEmployeesInCity");
+query.setParameter("city", "Ottawa"); //set city value
+List<Employee> employees = query.getResultList();
+```
 ### Native Queries
+To use native query we can simply call createNativeQuery() method from entity manager.
+
+Sample 1:
+
+```java
+List<Author> results = this.em.createNativeQuery("SELECT a.id, a.firstName, a.lastName, a.version FROM Author a", Author.class).getResultList();
+```
+
+In first sample we need to define all Author column name correctly in order to auto map result to Author Entity. If we want custom mapping we need to define it in an xml file orm.xml.
+
+```xml
+<sql-result-set-mapping name="AuthorMappingXml">
+    <entity-result entity-class="org.thoughts.on.java.jpa.model.Author">
+        <field-result name="id" column="authorId"/>
+        <field-result name="firstName" column="firstName"/>
+        <field-result name="lastName" column="lastName"/>
+        <field-result name="version" column="version"/>
+    </entity-result>
+</sql-result-set-mapping>
+```
+
+Now we can use it to mapping below query where id changed as authorId.
+
+```java
+List<Author> results = this.em.createNativeQuery("SELECT a.id as authorId, a.firstName, a.lastName, a.version FROM Author a", "AuthorMapping").getResultList();
+```
 
 ##JPQL
 ### The Java Persistence Query Language
+JPA provided SQL like way to query entity called JPQL. 
+
 ### Query Structure
+JPQL query can retrieve an entity object rather than field result set from database, as with SQL. The JPQL query structure as follows.
+
+```
+SELECT ... FROM ...
+[WHERE ...]
+[GROUP BY ... [HAVING ...]]
+[ORDER BY ...]
+```
+
+The structure of JPQL DELETE and UPDATE queries is simpler as follows.
+
+```
+DELETE FROM ... [WHERE ...]
+ 
+UPDATE ... SET ... [WHERE ...]
+```
 ### Path Expressions
+
 ### Filtering
+
 ### Scalar Functions
+Numeric, string, datetime, case, and entity type expressions result in scalar values.
+
+- Arithmetic
+ - unary(+,-)
+ - mupltipication and division(*,/)
+ - addition and subtraction(+, -)
+- Built-in String, Arithmetic, and Datetime Functional Expressions
+ - String Function
+  - CONCAT(string_expression, string_expression {, string_expression}* ) 
+  - SUBSTRING(string_expression,arithmetic_expression [, arithmetic_expression]) 
+  - TRIM([[trim_specification] [trim_character] FROM] string_expression) 
+  - LOWER(string_expression) 
+  - UPPER(string_expression)trim_specification ::= LEADING | TRAILING | BOTH
+  - LENGTH(string_expression) 
+  - LOCATE(string_expression, string_expression[, arithmetic_expression])
+ - Arithmetic Functions
+  - ABS(arithmetic_expression) 
+  - SQRT(arithmetic_expression) 
+  - MOD(arithmetic_expression, arithmetic_expression) 
+  - SIZE(collection_valued_path_expression) 
+  - INDEX(identification_variable)
+ - Datetime Functions
+  - CURRENT_DATE 
+  - CURRENT_TIME 
+  - CURRENT_TIMESTAMP
+ - Invocation of Predefined and User-defined Database Functions
+  - FUNCTION(function_name {, function_arg}*)
+ - Case Expressions
+  - CASE
+  - WHEN
+  - ELSE
+  - END
+  - COALESCE(scalar_expression {, scalar_expression}+)
+ - Entity Type Expressions
+  - TYPE (SELECT e FROM Employee e WHERE TYPE(e) IN (Exempt, Contractor))
+  
 ### Operators and Precedence between, like, in, is null, is empty
 ### Ordering
 ### Aliases
